@@ -1,6 +1,6 @@
 package eu.mrndesign.matned.metalserwisproductionrest.service;
 
-import eu.mrndesign.matned.metalserwisproductionrest.dto.DTOEintityDescriptionImplementation;
+import eu.mrndesign.matned.metalserwisproductionrest.dto.DTOEntityDescriptionImplementation;
 import eu.mrndesign.matned.metalserwisproductionrest.model.common.EntityDescription;
 import eu.mrndesign.matned.metalserwisproductionrest.model.common.EntityDescriptionImplementation;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,12 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
-public abstract class BaseService<E> {
+public abstract class BaseService {
 
     @Value("${default.sort.by}")
     protected String defaultSortBy;
@@ -24,7 +22,7 @@ public abstract class BaseService<E> {
     @Value("${default.page.size}")
     protected Integer defaultPageSize;
 
-    protected EntityDescription getEntityDescription(EntityDescriptionImplementation entity, DTOEintityDescriptionImplementation dto) {
+    protected EntityDescription getEntityDescription(EntityDescriptionImplementation entity, DTOEntityDescriptionImplementation dto) {
         EntityDescription entityDescription;
         if (entity.getEntityDescription() == null)
             entityDescription = new EntityDescription(dto.getName(), dto.getDescription());
@@ -75,25 +73,6 @@ public abstract class BaseService<E> {
                     Sort.by(new Sort.Order(getSortDirection("asc"), "id")));
         }
         return pageable;
-    }
-
-    protected List<E> getAddressDTOsSortedByStreetRelevance(String searchedValue, List<E> list, String type) {
-        List<E> sortedListBySearchRelevance = new LinkedList<>();
-        sortedListBySearchRelevance.addAll(
-                list.stream()
-                        .filter(x -> getSortingFilter(x, searchedValue, type))
-                        .collect(Collectors.toList())
-        );
-        sortedListBySearchRelevance.addAll(
-                list.stream()
-                        .filter(x -> !getSortingFilter(x, searchedValue, type))
-                        .collect(Collectors.toList())
-        );
-        return sortedListBySearchRelevance;
-    }
-
-    protected boolean getSortingFilter(E x, String searchedValue, String type) {
-        return true;
     }
 
     protected boolean isChanged(String str) {

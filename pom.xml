@@ -11,7 +11,7 @@
 	<groupId>eu.mrndesign.matned</groupId>
 	<artifactId>metalserwis-production-rest</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>metalserwis-production-rest</name>
+	<name>metal-serwis-production-rest</name>
 	<description>Metalserwis rest </description>
 
 	<developers>
@@ -51,6 +51,16 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!--        SESSION-->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-jdbc</artifactId>
 		</dependency>
 
 		<!--        DATABASE-->

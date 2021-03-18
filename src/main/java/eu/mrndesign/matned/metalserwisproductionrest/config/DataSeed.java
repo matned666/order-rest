@@ -1,7 +1,9 @@
 package eu.mrndesign.matned.metalserwisproductionrest.config;
 
+import eu.mrndesign.matned.metalserwisproductionrest.model.order.Process;
 import eu.mrndesign.matned.metalserwisproductionrest.model.security.User;
 import eu.mrndesign.matned.metalserwisproductionrest.model.security.UserRole;
+import eu.mrndesign.matned.metalserwisproductionrest.repository.ProcessRepository;
 import eu.mrndesign.matned.metalserwisproductionrest.repository.UserRepository;
 import eu.mrndesign.matned.metalserwisproductionrest.repository.UserRoleRepository;
 import org.springframework.beans.factory.InitializingBean;
@@ -21,13 +23,15 @@ public class DataSeed implements InitializingBean {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
+    private final ProcessRepository processRepository;
 
     public DataSeed(PasswordEncoder passwordEncoder,
                     UserRepository userRepository,
-                    UserRoleRepository userRoleRepository) {
+                    UserRoleRepository userRoleRepository, ProcessRepository processRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
+        this.processRepository = processRepository;
     }
 
     @Override
@@ -36,6 +40,7 @@ public class DataSeed implements InitializingBean {
             createRole(role);
         }
         createDefaultUser();
+        createDefaultProcesses();
     }
 
 
@@ -48,7 +53,6 @@ public class DataSeed implements InitializingBean {
     }
 
     private void createDefaultUser() {
-
         if (!userRepository.existsByLogin(defaultAdminLogin)) {
             User defaultUser = new User();
             defaultUser.setLogin(defaultAdminLogin);
@@ -56,6 +60,22 @@ public class DataSeed implements InitializingBean {
             UserRole role = userRoleRepository.findByRoleName(UserRole.Role.ADMIN.roleName());
             defaultUser.addRole(role);
             userRepository.save(defaultUser);
+        }
+    }
+
+    private void createDefaultProcesses(){
+        createProcess("Cięcie piłą", "Cięcie elementów piłą taśmową");
+        createProcess("Cięcie wykrojnikiem", "Cięcie elementów na prasie hydraulicznej");
+        createProcess("Ciągnięcie, prostowanie i cięcie prętów", "Wyciąganie prętów na odpowiedni wymiar");
+        createProcess("Gwintowanie", "Walcowanie gwintów");
+        createProcess("Ocynk galwaniczny", "ocynk galwaniczny");
+        createProcess("Ocynk ogniowy", "ocynk ogniowy");
+    }
+
+    private void createProcess(String process, String description) {
+        if (!processRepository.existsByName(process)){
+            Process processToAdd = new Process(process, description);
+            processRepository.save(processToAdd);
         }
     }
 
