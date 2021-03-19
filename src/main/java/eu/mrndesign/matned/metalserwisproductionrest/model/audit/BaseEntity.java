@@ -7,7 +7,9 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 @MappedSuperclass
-public abstract class BaseEntity extends AbstractAuditable<User, Long> {
+public abstract class BaseEntity<E> extends AbstractAuditable<User, Long> {
+
+    public abstract void applyNew(E editedData);
 
     @Version
     private Long version;
@@ -19,5 +21,4 @@ public abstract class BaseEntity extends AbstractAuditable<User, Long> {
     public void setVersion(Long version) {
         this.version = version;
     }
-
 }

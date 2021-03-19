@@ -1,5 +1,6 @@
 package eu.mrndesign.matned.metalserwisproductionrest.model.order;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.order.OrderDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.BaseEntity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,7 +13,17 @@ import java.util.List;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "CLIENT_ORDER")
-public class Order extends BaseEntity implements AuditInterface {
+public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
+
+    public static Order apply(OrderDTO dto, List<Process> processes, ClientEntity client, Delivery delivery){
+        return new OrderBuilder(dto.getProduct(), dto.getDesiredQuantity())
+                .client(client)
+                .delivery(delivery)
+                .description(dto.getDescription())
+                .orderDate(dto.getOrderDate())
+                .orderDeadline(dto.getOrderDeadline())
+                .build();
+    }
 
     private String product;
     private int desiredQuantity;
@@ -114,6 +125,11 @@ public class Order extends BaseEntity implements AuditInterface {
         return client;
     }
 
+    @Override
+    public void applyNew(OrderDTO editedData) {
+
+    }
+
     public static class OrderBuilder{
 
         private String product;
@@ -123,10 +139,13 @@ public class Order extends BaseEntity implements AuditInterface {
         private Date orderDeadline;
         private Delivery delivery;
         private ClientEntity client;
+        private List<Process> processes;
+
 
         public OrderBuilder(String product, int desiredQuantity) {
             this.product = product;
             this.desiredQuantity = desiredQuantity;
+            processes = new LinkedList<>();
         }
 
         public OrderBuilder description(String description){
@@ -153,6 +172,14 @@ public class Order extends BaseEntity implements AuditInterface {
             this.client = client;
             return this;
         }
+
+        public OrderBuilder addProcesses(List<Process> processes){
+            this.processes.addAll(processes);
+            return this;
+        }
+
+
+
 
         public Order build(){
             return new Order(this);

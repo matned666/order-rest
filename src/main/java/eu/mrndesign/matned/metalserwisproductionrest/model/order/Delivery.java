@@ -1,5 +1,6 @@
 package eu.mrndesign.matned.metalserwisproductionrest.model.order;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.order.DeliveryDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.BaseEntity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,7 +15,9 @@ import java.util.Objects;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "DELIVERY")
-public class Delivery extends BaseEntity implements AuditInterface {
+public class Delivery extends BaseEntity<DeliveryDTO> implements AuditInterface {
+
+    private String deliveryCode;
 
     @Enumerated
     private DeliveryType deliveryType;
@@ -27,10 +30,26 @@ public class Delivery extends BaseEntity implements AuditInterface {
     public Delivery() {
     }
 
-    public Delivery(DeliveryType deliveryType, LocalDateTime deliveryTime, String description) {
+    public Delivery(String deliveryCode,
+                    DeliveryType deliveryType,
+                    LocalDateTime deliveryTime,
+                    String description) {
+        this.deliveryCode = deliveryCode;
         this.deliveryType = deliveryType;
         this.deliveryTime = deliveryTime;
         this.description = description;
+    }
+
+    public String getDeliveryCode() {
+        return deliveryCode;
+    }
+
+    public boolean isShipped() {
+        return isShipped;
+    }
+
+    public void setShipped(boolean shipped) {
+        isShipped = shipped;
     }
 
     public DeliveryType getDeliveryType() {
@@ -80,6 +99,11 @@ public class Delivery extends BaseEntity implements AuditInterface {
                 ", deliveryTime=" + deliveryTime +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    @Override
+    public void applyNew(DeliveryDTO editedData) {
+
     }
 
     public enum DeliveryType{

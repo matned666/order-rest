@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public abstract class BaseService {
+public abstract class BaseService{
 
     @Value("${default.sort.by}")
     protected String defaultSortBy;

@@ -1,5 +1,6 @@
 package eu.mrndesign.matned.metalserwisproductionrest.model.order;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.order.ClientDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.BaseEntity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "CLIENT_ENTITY")
-public class ClientEntity extends BaseEntity implements AuditInterface {
+public class ClientEntity extends BaseEntity<ClientDTO> implements AuditInterface {
 
     private String clientName;
 
@@ -43,5 +44,10 @@ public class ClientEntity extends BaseEntity implements AuditInterface {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), clientName);
+    }
+
+    @Override
+    public void applyNew(ClientDTO editedData) {
+
     }
 }

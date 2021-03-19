@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions.USER_NOT_FOUND;
+
 
 @Service
 public class UserService extends BaseService{
@@ -24,7 +26,6 @@ public class UserService extends BaseService{
     @Value("${default.admin.username}")
     private String defaultAdminLogin;
 
-    public static final String USER_NOT_FOUND = "User not found";
     private final PasswordEncoder passwordEncoder;
     private final HttpServletRequest request;
     private final UserRepository userRepository;

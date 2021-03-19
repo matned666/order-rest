@@ -1,5 +1,6 @@
 package eu.mrndesign.matned.metalserwisproductionrest.model.order;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.order.ProcessDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.BaseEntity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @Entity()
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "PROCESS")
-public class Process extends BaseEntity implements AuditInterface {
+public class Process extends BaseEntity<ProcessDTO> implements AuditInterface {
 
     private String processName;
     private String description;
@@ -61,5 +62,10 @@ public class Process extends BaseEntity implements AuditInterface {
                 "processName='" + processName + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    @Override
+    public void applyNew(ProcessDTO editedData) {
+
     }
 }
