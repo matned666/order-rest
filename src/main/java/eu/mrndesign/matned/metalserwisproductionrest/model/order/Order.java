@@ -22,6 +22,7 @@ public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
                 .description(dto.getDescription())
                 .orderDate(dto.getOrderDate())
                 .orderDeadline(dto.getOrderDeadline())
+                .addProcesses(processes)
                 .build();
     }
 
@@ -54,6 +55,7 @@ public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
         this.delivery = builder.delivery;
         this.client = builder.client;
         this.processes = new LinkedList<>();
+        this.processes.addAll(builder.processes);
     }
 
 
@@ -125,9 +127,27 @@ public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
         return client;
     }
 
-    @Override
-    public void applyNew(OrderDTO editedData) {
+    public void setClient(ClientEntity client) {
+        this.client = client;
+    }
 
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+
+    @Override
+    public void applyNew(OrderDTO dto) {
+        this.product = dto.getProduct();
+        this.desiredQuantity = dto.getDesiredQuantity();
+        this.quantityDone = dto.getQuantityDone();
+        this.description = dto.getDescription();
+        if(dto.getOrderDate() != null) this.orderDate = dto.getOrderDate();
+        if(dto.getOrderDate() != null) this.orderDeadline = dto.getOrderDeadline();
+    }
+
+    public void applyNewProcessList(List<Process> allById) {
+        this.processes.clear();
+        this.processes.addAll(allById);
     }
 
     public static class OrderBuilder{
