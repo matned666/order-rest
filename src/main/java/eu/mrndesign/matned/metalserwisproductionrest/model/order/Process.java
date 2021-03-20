@@ -30,22 +30,14 @@ public class Process extends BaseEntity<ProcessDTO> implements AuditInterface {
         return processName;
     }
 
-    public void setProcessName(String processName) {
-        this.processName = processName;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Process process = (Process) o;
         return Objects.equals(processName, process.processName);
@@ -57,15 +49,8 @@ public class Process extends BaseEntity<ProcessDTO> implements AuditInterface {
     }
 
     @Override
-    public String toString() {
-        return "Process{" +
-                "processName='" + processName + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
-
-    @Override
     public void applyNew(ProcessDTO editedData) {
-
+        this.processName = editedData.getName();
+        this.description = editedData.getDescription();
     }
 }

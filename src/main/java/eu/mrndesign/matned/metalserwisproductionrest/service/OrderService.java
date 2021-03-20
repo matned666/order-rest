@@ -122,24 +122,7 @@ public class OrderService extends BaseService {
         return findList(orderRepository.findOrdersByOverDeadlineDate(getPageable(startPage, itemsPerPage, sortBy)));
     }
 
-//  PROCESS  TODO
 
-//    public ProcessDTO saveProcess(ProcessDTO dto){
-//
-//    }
-//
-//    public List<ProcessDTO> findAllProcesses(Integer startPage, Integer itemsPerPage, String[] sortBy){
-//
-//
-//    }
-//
-//    public ProcessDTO findProcessById(Long id){
-//
-//    }
-//
-//    public ProcessDTO editProcess(Long id, ProcessDTO editedData){
-//
-//    }
 
 //    Private
 
