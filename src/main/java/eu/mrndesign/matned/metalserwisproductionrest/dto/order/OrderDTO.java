@@ -1,5 +1,6 @@
 package eu.mrndesign.matned.metalserwisproductionrest.dto.order;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.BaseDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.DTOEntityDescriptionImplementation;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.audit.AuditDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class OrderDTO implements DTOEntityDescriptionImplementation {
+public class OrderDTO extends BaseDTO implements DTOEntityDescriptionImplementation {
 
     public static OrderDTO apply(Order entity) {
         OrderDTO dto = new OrderDTO.OrderDTOBuilder(entity.getProduct(), entity.getDesiredQuantity())
@@ -52,7 +53,6 @@ public class OrderDTO implements DTOEntityDescriptionImplementation {
     private String clientName;
     private String delivery;
     private List<String> processes;
-    private AuditDTO auditDTO;
 
     private OrderDTO(OrderDTOBuilder builder) {
         this.product = builder.product;

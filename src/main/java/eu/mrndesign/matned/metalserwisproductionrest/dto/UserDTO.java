@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UserDTO {
+public class UserDTO extends BaseDTO{
 
     public static UserDTO apply(User entity) {
         return new UserDTO(entity.getLogin());
@@ -27,7 +27,6 @@ public class UserDTO {
             message = "It should be a valid email address"
     )
     private String login;
-    private AuditDTO auditDTO;
 
     public UserDTO() {
     }

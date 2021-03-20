@@ -22,6 +22,7 @@ public class Delivery extends BaseEntity<DeliveryDTO> implements AuditInterface 
     @Enumerated
     private DeliveryType deliveryType;
 
+    private LocalDateTime pickUpTime;
     private LocalDateTime deliveryTime;
     private String description;
 
@@ -32,12 +33,15 @@ public class Delivery extends BaseEntity<DeliveryDTO> implements AuditInterface 
 
     public Delivery(String deliveryCode,
                     DeliveryType deliveryType,
+                    LocalDateTime pickUpTime,
                     LocalDateTime deliveryTime,
                     String description) {
         this.deliveryCode = deliveryCode;
         this.deliveryType = deliveryType;
+        this.pickUpTime = pickUpTime;
         this.deliveryTime = deliveryTime;
         this.description = description;
+        this.isShipped = false;
     }
 
     public String getDeliveryCode() {
@@ -48,32 +52,24 @@ public class Delivery extends BaseEntity<DeliveryDTO> implements AuditInterface 
         return isShipped;
     }
 
-    public void setShipped(boolean shipped) {
-        isShipped = shipped;
+    public void setShipped() {
+        isShipped = !isShipped;
     }
 
     public DeliveryType getDeliveryType() {
         return deliveryType;
     }
 
-    public void setDeliveryType(DeliveryType deliveryType) {
-        this.deliveryType = deliveryType;
+    public LocalDateTime getPickUpTime() {
+        return pickUpTime;
     }
 
     public LocalDateTime getDeliveryTime() {
         return deliveryTime;
     }
 
-    public void setDeliveryTime(LocalDateTime deliveryTime) {
-        this.deliveryTime = deliveryTime;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     @Override
@@ -103,7 +99,11 @@ public class Delivery extends BaseEntity<DeliveryDTO> implements AuditInterface 
 
     @Override
     public void applyNew(DeliveryDTO editedData) {
-
+         this.deliveryCode = editedData.getName();
+         this.deliveryType = Delivery.DeliveryType.valueOf(editedData.getDeliveryType());
+         this.deliveryTime = editedData.getDeliveryTime();
+         this.description = editedData.getDescription();
+         this.isShipped = editedData.isShipped();
     }
 
     public enum DeliveryType{

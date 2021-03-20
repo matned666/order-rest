@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @PasswordMatches
-public class UserRegistrationDTO implements PasswordValidationObjectInterface {
+public class UserRegistrationDTO extends BaseDTO implements PasswordValidationObjectInterface {
 
     public static UserRegistrationDTO applyWithAudit(User entity){
         return new UserRegistrationDTO(entity.getLogin(), entity.getPassword(), AuditInterface.apply(entity));
@@ -38,11 +38,6 @@ public class UserRegistrationDTO implements PasswordValidationObjectInterface {
 
     private String passwordConfirm;
 
-    private AuditDTO auditDTO;
-
-    public UserRegistrationDTO() {
-    }
-
     public UserRegistrationDTO(String login, String password) {
         this.login = login;
         this.password = password;
@@ -60,10 +55,6 @@ public class UserRegistrationDTO implements PasswordValidationObjectInterface {
 
     public String getLogin() {
         return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public String getPassword() {
@@ -84,10 +75,6 @@ public class UserRegistrationDTO implements PasswordValidationObjectInterface {
 
     public AuditDTO getAuditDTO() {
         return auditDTO;
-    }
-
-    public void setAuditDTO(AuditDTO auditDTO) {
-        this.auditDTO = auditDTO;
     }
 
     @Override

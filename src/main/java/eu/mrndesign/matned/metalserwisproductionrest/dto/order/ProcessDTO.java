@@ -1,8 +1,9 @@
 package eu.mrndesign.matned.metalserwisproductionrest.dto.order;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.BaseDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.DTOEntityDescriptionImplementation;
 
-public class ProcessDTO implements DTOEntityDescriptionImplementation {
+public class ProcessDTO extends BaseDTO implements DTOEntityDescriptionImplementation {
 
     @Override
     public String getName() {

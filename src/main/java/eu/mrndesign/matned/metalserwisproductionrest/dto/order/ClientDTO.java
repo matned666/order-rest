@@ -1,11 +1,12 @@
 package eu.mrndesign.matned.metalserwisproductionrest.dto.order;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.BaseDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.DTOEntityDescriptionImplementation;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.audit.AuditDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.ClientEntity;
 
-public class ClientDTO implements DTOEntityDescriptionImplementation {
+public class ClientDTO  extends BaseDTO implements DTOEntityDescriptionImplementation {
 
     public static ClientDTO apply(ClientEntity entity){
         return new ClientDTO(entity.getClientName(), entity.getClientDescription());
@@ -19,8 +20,6 @@ public class ClientDTO implements DTOEntityDescriptionImplementation {
 
     private String clientName;
     private String clientDescription;
-
-    private AuditDTO auditDTO;
 
 
     public ClientDTO(String clientName, String clientDescription) {
