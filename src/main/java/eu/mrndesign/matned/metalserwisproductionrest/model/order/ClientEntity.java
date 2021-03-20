@@ -16,26 +16,29 @@ import java.util.Objects;
 public class ClientEntity extends BaseEntity<ClientDTO> implements AuditInterface {
 
     private String clientName;
+    private String clientDescription;
+
 
     public ClientEntity() {
     }
 
-    public ClientEntity(String clientName) {
+    public ClientEntity(String clientName, String clientDescription) {
         this.clientName = clientName;
+        this.clientDescription = clientDescription;
     }
 
     public String getClientName() {
         return clientName;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public String getClientDescription() {
+        return clientDescription;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         ClientEntity that = (ClientEntity) o;
         return Objects.equals(clientName, that.clientName);
@@ -48,6 +51,7 @@ public class ClientEntity extends BaseEntity<ClientDTO> implements AuditInterfac
 
     @Override
     public void applyNew(ClientDTO editedData) {
-
+        this.clientName = editedData.getName();
+        this.clientDescription = editedData.getDescription();
     }
 }
