@@ -11,6 +11,8 @@ import javax.validation.constraints.Size;
 
 public class UserDTO extends BaseDTO{
 
+
+
     public static UserDTO apply(User entity) {
         return new UserDTO(entity.getLogin());
     }

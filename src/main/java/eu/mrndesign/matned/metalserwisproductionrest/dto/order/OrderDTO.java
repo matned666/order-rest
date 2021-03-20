@@ -5,6 +5,8 @@ import eu.mrndesign.matned.metalserwisproductionrest.dto.DTOEntityDescriptionImp
 import eu.mrndesign.matned.metalserwisproductionrest.dto.audit.AuditDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.Order;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -14,7 +16,14 @@ import java.util.List;
 
 public class OrderDTO extends BaseDTO implements DTOEntityDescriptionImplementation {
 
-    public static OrderDTO apply(Order entity) {
+    public static OrderDTO apply(Order o) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN")))
+            return applyWithAudit(o);
+        else return applyWithoutAudit(o);
+    }
+
+    private static OrderDTO applyWithoutAudit(Order entity) {
         OrderDTO dto = new OrderDTO.OrderDTOBuilder(entity.getProduct(), entity.getDesiredQuantity())
                 .quantityDone(entity.getQuantityDone())
                 .description(entity.getDescription())
@@ -30,7 +39,7 @@ public class OrderDTO extends BaseDTO implements DTOEntityDescriptionImplementat
         return dto;
     }
 
-    public static OrderDTO applyWithAudit(Order entity) {
+    private static OrderDTO applyWithAudit(Order entity) {
         OrderDTO dto = apply(entity);
         dto.auditDTO = AuditInterface.apply(entity);
         return dto;

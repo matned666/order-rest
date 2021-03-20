@@ -5,14 +5,23 @@ import eu.mrndesign.matned.metalserwisproductionrest.dto.DTOEntityDescriptionImp
 import eu.mrndesign.matned.metalserwisproductionrest.dto.audit.AuditDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.ClientEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class ClientDTO  extends BaseDTO implements DTOEntityDescriptionImplementation {
 
-    public static ClientDTO apply(ClientEntity entity){
+    public static ClientDTO apply(ClientEntity c) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN")))
+            return applyWithAudit(c);
+        else return applyWithoutAudit(c);
+    }
+
+    private static ClientDTO applyWithoutAudit(ClientEntity entity){
         return new ClientDTO(entity.getClientName(), entity.getClientDescription());
     }
 
-    public static ClientDTO applyWithAudit(ClientEntity entity){
+    private static ClientDTO applyWithAudit(ClientEntity entity){
         ClientDTO dto = new ClientDTO(entity.getClientName(), entity.getClientDescription());
         dto.auditDTO = AuditInterface.apply(entity);
         return dto;

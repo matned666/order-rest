@@ -3,6 +3,8 @@ package eu.mrndesign.matned.metalserwisproductionrest.service;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.order.ProcessDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.Process;
 import eu.mrndesign.matned.metalserwisproductionrest.repository.ProcessRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -4,12 +4,21 @@ import eu.mrndesign.matned.metalserwisproductionrest.dto.BaseDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.DTOEntityDescriptionImplementation;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.Delivery;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 
 public class DeliveryDTO extends BaseDTO implements DTOEntityDescriptionImplementation {
 
-    public static DeliveryDTO apply(Delivery entity){
+    public static DeliveryDTO apply(Delivery d) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN")))
+            return applyWithAudit(d);
+        else return applyWithoutAudit(d);
+    }
+
+    private static DeliveryDTO applyWithoutAudit(Delivery entity){
         DeliveryDTO dto = new DeliveryDTO(
                 entity.getDeliveryCode(),
                 entity.getDeliveryType().name(),
@@ -20,7 +29,7 @@ public class DeliveryDTO extends BaseDTO implements DTOEntityDescriptionImplemen
         return dto;
     }
 
-    public static DeliveryDTO applyWithAudit(Delivery entity){
+    private static DeliveryDTO applyWithAudit(Delivery entity){
         DeliveryDTO dto = apply(entity);
         dto.auditDTO = AuditInterface.apply(entity);
         return dto;
