@@ -19,6 +19,7 @@ public class OrderDTO implements DTOEntityDescriptionImplementation {
                 .description(entity.getDescription())
                 .orderDate(entity.getOrderDate() != null ? entity.getOrderDate() : new Date(System.currentTimeMillis()))
                 .isDone(entity.isDone())
+                .isActive(entity.isActive())
                 .clientName(entity.getClient().getClientName())
                 .delivery(entity.getDelivery().getDescription())
                 .build();
@@ -47,6 +48,7 @@ public class OrderDTO implements DTOEntityDescriptionImplementation {
     private Date orderDate;
     private Date orderDeadline;
     private boolean isDone;
+    private boolean isActive;
     private String clientName;
     private String delivery;
     private List<String> processes;
@@ -54,18 +56,22 @@ public class OrderDTO implements DTOEntityDescriptionImplementation {
 
     private OrderDTO(OrderDTOBuilder builder) {
         this.product = builder.product;
+        this.description = builder.description;
         this.desiredQuantity = builder.desiredQuantity;
         this.quantityDone = builder.quantityDone;
         this.description = builder.description;
         this.orderDate = builder.orderDate != null ? builder.orderDate : new Date(System.currentTimeMillis());
         this.orderDeadline = builder.orderDeadline;
         this.isDone = builder.isDone;
+        this.isActive = builder.isActive;
         this.clientName = builder.clientName;
         this.delivery = builder.delivery;
 
         this.processes = new LinkedList<>();
         this.processes.addAll(builder.processes);
     }
+
+
 
     public String getProduct() {
         return product;
@@ -87,6 +93,10 @@ public class OrderDTO implements DTOEntityDescriptionImplementation {
         return orderDeadline;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     public boolean isDone() {
         return isDone;
     }
@@ -103,42 +113,6 @@ public class OrderDTO implements DTOEntityDescriptionImplementation {
         return processes;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
-    }
-
-    public void setDesiredQuantity(int desiredQuantity) {
-        this.desiredQuantity = desiredQuantity;
-    }
-
-    public void setQuantityDone(int quantityDone) {
-        this.quantityDone = quantityDone;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public void setOrderDeadline(Date orderDeadline) {
-        this.orderDeadline = orderDeadline;
-    }
-
-    public void setDone(boolean done) {
-        isDone = done;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public void setDelivery(String delivery) {
-        this.delivery = delivery;
-    }
-
     public void addProcess(String process) {
         this.processes.add(process);
     }
@@ -153,12 +127,12 @@ public class OrderDTO implements DTOEntityDescriptionImplementation {
 
     @Override
     public String getName() {
-        return null;
+        return product;
     }
 
     @Override
     public String getDescription() {
-        return null;
+        return description;
     }
 
     public static class OrderDTOBuilder {
@@ -171,6 +145,7 @@ public class OrderDTO implements DTOEntityDescriptionImplementation {
         private Date orderDate;
         private Date orderDeadline;
         private boolean isDone;
+        private boolean isActive;
         private String clientName;
         private String delivery;
         private List<String> processes;
@@ -210,6 +185,11 @@ public class OrderDTO implements DTOEntityDescriptionImplementation {
 
         public OrderDTOBuilder isDone(boolean isDone) {
             this.isDone = isDone;
+            return this;
+        }
+
+        public OrderDTOBuilder isActive(boolean isActive) {
+            this.isActive = isActive;
             return this;
         }
 

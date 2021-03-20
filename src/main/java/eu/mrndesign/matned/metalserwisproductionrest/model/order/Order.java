@@ -34,6 +34,7 @@ public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
     private Date orderDeadline;
 
     private boolean isDone;
+    private boolean isActive;
 
     @ManyToOne
     private ClientEntity client;
@@ -56,6 +57,8 @@ public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
         this.client = builder.client;
         this.processes = new LinkedList<>();
         this.processes.addAll(builder.processes);
+        this.isDone = false;
+        this.isActive = false;
     }
 
 
@@ -133,6 +136,14 @@ public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
 
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive() {
+        isActive = !isActive;
     }
 
     @Override

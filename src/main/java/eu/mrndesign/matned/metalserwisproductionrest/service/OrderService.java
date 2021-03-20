@@ -1,6 +1,9 @@
 package eu.mrndesign.matned.metalserwisproductionrest.service;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.order.ClientDTO;
+import eu.mrndesign.matned.metalserwisproductionrest.dto.order.DeliveryDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.order.OrderDTO;
+import eu.mrndesign.matned.metalserwisproductionrest.dto.order.ProcessDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.ClientEntity;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.Delivery;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.Order;
@@ -43,6 +46,12 @@ public class OrderService extends BaseService {
         ClientEntity client = clientRepository.findByClientName(clientName).orElse(clientRepository.save(new ClientEntity()));
         Delivery deliveryEntity = deliveryRepository.findByDeliveryCode(deliveryCode).orElse(deliveryRepository.save(new Delivery()));
         return OrderDTO.apply(orderRepository.save(Order.apply(dto, processList, client, deliveryEntity)));
+    }
+
+    public OrderDTO changeOrderActiveStatus(Long orderId){
+        Order toEdit = orderRepository.findById(orderId).orElseThrow(()->new RuntimeException(NO_SUCH_ORDER));
+        toEdit.setActive();
+        return OrderDTO.apply(orderRepository.save(toEdit));
     }
 
  public OrderDTO findById(Long id){
@@ -116,6 +125,63 @@ public class OrderService extends BaseService {
         return findList(orderRepository.findOrdersByOverDeadlineDate(getPageable(startPage, itemsPerPage, sortBy)));
     }
 
+//  PROCESS  TODO
+
+//    public ProcessDTO saveProcess(ProcessDTO dto){
+//
+//    }
+//
+//    public List<ProcessDTO> findAllProcesses(){
+//
+//
+//    }
+//
+//    public ProcessDTO findProcessById(Long id){
+//
+//    }
+//
+//    public ProcessDTO editProcess(Long id, ProcessDTO editedData){
+//
+//    }
+//
+////    Delivery TODO
+//
+//    public DeliveryDTO saveDelivery(ProcessDTO dto){
+//
+//    }
+//
+//    public List<DeliveryDTO> findAllDeliveries(){
+//
+//    }
+//
+//    public DeliveryDTO findDeliveryById(Long id){
+//
+//    }
+//
+//    public DeliveryDTO editDelivery(Long id, DeliveryDTO editedData){
+//
+//    }
+//
+//
+//
+////    Client TODO
+//
+//    public ClientDTO saveClient(ClientDTO dto){
+//
+//    }
+//
+//    public List<ClientDTO> findAllClients(){
+//
+//
+//    }
+//
+//    public ClientDTO findClientById(Long id){
+//
+//    }
+//
+//    public ClientDTO editClient(Long id, ClientDTO editedData){
+//
+//    }
 
 
 
