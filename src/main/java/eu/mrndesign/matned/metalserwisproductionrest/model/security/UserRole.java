@@ -1,5 +1,6 @@
 package eu.mrndesign.matned.metalserwisproductionrest.model.security;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.UserRoleDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.BaseEntity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -9,7 +10,7 @@ import javax.persistence.EntityListeners;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class UserRole  extends BaseEntity implements AuditInterface {
+public class UserRole extends BaseEntity<UserRoleDTO> implements AuditInterface {
 
 
 
@@ -28,6 +29,11 @@ public class UserRole  extends BaseEntity implements AuditInterface {
 
     public String getRoleName() {
         return roleName;
+    }
+
+    @Override
+    public void applyNew(UserRoleDTO editedData) {
+
     }
 
     public enum Role {

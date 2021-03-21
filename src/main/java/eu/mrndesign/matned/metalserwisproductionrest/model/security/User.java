@@ -1,5 +1,6 @@
 package eu.mrndesign.matned.metalserwisproductionrest.model.security;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.UserDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.UserRegistrationDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.AuditInterface;
 import eu.mrndesign.matned.metalserwisproductionrest.model.audit.BaseEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "USER_ENTITY")
-public class User  extends BaseEntity implements AuditInterface {
+public class User extends BaseEntity<UserDTO> implements AuditInterface {
 
     public static final String ROLE_NOT_FOUND = "Role not found";
 
@@ -100,6 +101,12 @@ public class User  extends BaseEntity implements AuditInterface {
                 "login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+
+    @Override
+    public void applyNew(UserDTO editedData) {
+
     }
 }
 

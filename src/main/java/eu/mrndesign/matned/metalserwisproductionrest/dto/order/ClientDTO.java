@@ -8,6 +8,8 @@ import eu.mrndesign.matned.metalserwisproductionrest.model.order.ClientEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Objects;
+
 public class ClientDTO  extends BaseDTO implements DTOEntityDescriptionImplementation {
 
     public static ClientDTO apply(ClientEntity c) {
@@ -34,6 +36,19 @@ public class ClientDTO  extends BaseDTO implements DTOEntityDescriptionImplement
     public ClientDTO(String clientName, String clientDescription) {
         this.clientName = clientName;
         this.clientDescription = clientDescription;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClientDTO clientDTO = (ClientDTO) o;
+        return Objects.equals(clientName, clientDTO.clientName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientName);
     }
 
     @Override

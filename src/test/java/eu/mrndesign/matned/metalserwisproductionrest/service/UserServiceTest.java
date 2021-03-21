@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static eu.mrndesign.matned.metalserwisproductionrest.service.UserService.USER_NOT_FOUND;
+import static eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions.USER_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -66,7 +66,7 @@ class UserServiceTest {
     void isThrowingRuntimeExceptionWhenUserNotFound(){
         doReturn(Optional.empty()).when(userRepository).findById(any());
 
-        assertThrows(RuntimeException.class, ()->{userService.findUserById(1L);}, USER_NOT_FOUND);
+        assertThrows(RuntimeException.class, ()-> userService.findUserById(1L), USER_NOT_FOUND);
     }
 
     @Test

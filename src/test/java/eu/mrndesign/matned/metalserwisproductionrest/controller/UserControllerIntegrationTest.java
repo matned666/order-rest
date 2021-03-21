@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import java.util.List;
 
 import static eu.mrndesign.matned.metalserwisproductionrest.JsonOps.asJsonString;
-import static eu.mrndesign.matned.metalserwisproductionrest.service.UserService.USER_NOT_FOUND;
+import static eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions.USER_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
