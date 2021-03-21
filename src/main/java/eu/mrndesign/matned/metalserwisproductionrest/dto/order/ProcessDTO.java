@@ -7,6 +7,8 @@ import eu.mrndesign.matned.metalserwisproductionrest.model.order.Process;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Objects;
+
 public class ProcessDTO extends BaseDTO implements DTOEntityDescriptionImplementation {
 
     public static ProcessDTO apply(Process p) {
@@ -35,6 +37,19 @@ public class ProcessDTO extends BaseDTO implements DTOEntityDescriptionImplement
         this.description = description;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProcessDTO that = (ProcessDTO) o;
+        return Objects.equals(processName, that.processName) &&
+                Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(processName);
+    }
 
     @Override
     public String getName() {

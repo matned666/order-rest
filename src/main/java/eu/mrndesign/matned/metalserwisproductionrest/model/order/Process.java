@@ -50,7 +50,11 @@ public class Process extends BaseEntity<ProcessDTO> implements AuditInterface {
 
     @Override
     public void applyNew(ProcessDTO editedData) {
-        this.processName = editedData.getName();
-        this.description = editedData.getDescription();
+        if (editedData.getName() != null)
+            if (!editedData.getName().isEmpty())
+                this.processName = editedData.getName();
+        if (editedData.getDescription() != null)
+            if (!editedData.getDescription().isEmpty())
+                this.description = editedData.getDescription();
     }
 }

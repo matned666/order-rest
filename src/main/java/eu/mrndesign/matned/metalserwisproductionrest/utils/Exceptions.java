@@ -9,4 +9,6 @@ public class Exceptions {
     public static final String CLIENT_DOESN_T_EXIST = "SUCH CLIENT DOESN'T EXIST";
     public static final String NO_SUCH_DELIVERY = "No such delivery";
     public static final String NO_SUCH_PROCESS = "No such process";
+    public static final String WRONG_DATA_GIVEN = "Wrong data given";
+    public static final String NO_EDITED_DATA_GIVEN = "No edited data given";
 }

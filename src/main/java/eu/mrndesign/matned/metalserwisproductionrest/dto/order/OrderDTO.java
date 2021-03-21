@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class OrderDTO extends BaseDTO implements DTOEntityDescriptionImplementation {
 
@@ -30,8 +31,8 @@ public class OrderDTO extends BaseDTO implements DTOEntityDescriptionImplementat
                 .orderDate(entity.getOrderDate() != null ? entity.getOrderDate() : new Date(System.currentTimeMillis()))
                 .isDone(entity.isDone())
                 .isActive(entity.isActive())
-                .clientName(entity.getClient().getClientName())
-                .delivery(entity.getDelivery().getDescription())
+                .clientName(entity.getClient() !=null? entity.getClient().getClientName(): null)
+                .delivery(entity.getDelivery() !=null? entity.getDelivery().getDeliveryCode(): null)
                 .build();
         if (dto.orderDeadline != null)
             dto.orderDeadline = entity.getOrderDeadline();
@@ -142,6 +143,29 @@ public class OrderDTO extends BaseDTO implements DTOEntityDescriptionImplementat
     @Override
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderDTO orderDTO = (OrderDTO) o;
+        return desiredQuantity == orderDTO.desiredQuantity &&
+                quantityDone == orderDTO.quantityDone &&
+                isDone == orderDTO.isDone &&
+                isActive == orderDTO.isActive &&
+                Objects.equals(product, orderDTO.product) &&
+                Objects.equals(description, orderDTO.description) &&
+                Objects.equals(orderDate, orderDTO.orderDate) &&
+                Objects.equals(orderDeadline, orderDTO.orderDeadline) &&
+                Objects.equals(clientName, orderDTO.clientName) &&
+                Objects.equals(delivery, orderDTO.delivery) &&
+                Objects.equals(processes, orderDTO.processes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, desiredQuantity, quantityDone, description, orderDate, orderDeadline, isDone, isActive, clientName, delivery, processes);
     }
 
     public static class OrderDTOBuilder {

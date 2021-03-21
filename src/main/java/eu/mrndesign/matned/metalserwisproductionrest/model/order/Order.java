@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -148,10 +149,10 @@ public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
 
     @Override
     public void applyNew(OrderDTO dto) {
-        this.product = dto.getProduct();
+        if (dto.getProduct() != null) if (!dto.getProduct().isEmpty()) this.product = dto.getProduct();
         this.desiredQuantity = dto.getDesiredQuantity();
         this.quantityDone = dto.getQuantityDone();
-        this.description = dto.getDescription();
+        if (dto.getDescription() != null) if (!dto.getDescription().isEmpty()) this.description = dto.getDescription();
         if(dto.getOrderDate() != null) this.orderDate = dto.getOrderDate();
         if(dto.getOrderDate() != null) this.orderDeadline = dto.getOrderDeadline();
     }
@@ -159,6 +160,30 @@ public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
     public void applyNewProcessList(List<Process> allById) {
         this.processes.clear();
         this.processes.addAll(allById);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Order order = (Order) o;
+        return desiredQuantity == order.desiredQuantity &&
+                quantityDone == order.quantityDone &&
+                isDone == order.isDone &&
+                isActive == order.isActive &&
+                Objects.equals(product, order.product) &&
+                Objects.equals(description, order.description) &&
+                Objects.equals(orderDate, order.orderDate) &&
+                Objects.equals(orderDeadline, order.orderDeadline) &&
+                Objects.equals(client, order.client) &&
+                Objects.equals(delivery, order.delivery) &&
+                Objects.equals(processes, order.processes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), product, desiredQuantity, quantityDone, description, orderDate, orderDeadline, isDone, isActive, client, delivery, processes);
     }
 
     public static class OrderBuilder{

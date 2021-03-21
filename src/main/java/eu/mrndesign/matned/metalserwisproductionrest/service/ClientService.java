@@ -3,6 +3,7 @@ package eu.mrndesign.matned.metalserwisproductionrest.service;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.order.ClientDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.ClientEntity;
 import eu.mrndesign.matned.metalserwisproductionrest.repository.ClientRepository;
+import eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,13 +41,24 @@ public class ClientService extends BaseService{
     }
 
     public ClientDTO findClientById(Long id) {
-        return ClientDTO.apply(clientRepository.findById(id).orElseThrow(() -> new RuntimeException(CLIENT_DOESN_T_EXIST)));
+        return ClientDTO.apply(findClientByIdService(id));
     }
 
     public ClientDTO editClient(Long id, ClientDTO editedData) {
-        ClientEntity entity = clientRepository.findById(id).orElseThrow(() -> new RuntimeException(CLIENT_DOESN_T_EXIST));
-        entity.applyNew(editedData);
-        return ClientDTO.apply(clientRepository.save(entity));
+        if(editedData != null) {
+            ClientEntity entity = findClientByIdService(id);
+            if (editedData.getName() != null) if (!editedData.getName().isEmpty())
+                entity.setClientName(editedData.getName());
+            if (editedData.getDescription() != null) if (!editedData.getDescription().isEmpty())
+                entity.setClientDescription(editedData.getDescription());
+            return ClientDTO.apply(clientRepository.save(entity));
+        }
+        throw new RuntimeException(Exceptions.WRONG_DATA_GIVEN);
+    }
+
+
+    private ClientEntity findClientByIdService(Long id){
+        return clientRepository.findById(id).orElseThrow(() -> new RuntimeException(CLIENT_DOESN_T_EXIST));
     }
 
 }

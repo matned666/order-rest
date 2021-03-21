@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class DeliveryDTO extends BaseDTO implements DTOEntityDescriptionImplementation {
 
@@ -21,7 +22,7 @@ public class DeliveryDTO extends BaseDTO implements DTOEntityDescriptionImplemen
     private static DeliveryDTO applyWithoutAudit(Delivery entity){
         DeliveryDTO dto = new DeliveryDTO(
                 entity.getDeliveryCode(),
-                entity.getDeliveryType().name(),
+                entity.getDeliveryType()!= null? entity.getDeliveryType().name() : null,
                 entity.getPickUpTime(),
                 entity.getDeliveryTime(),
                 entity.getDescription());
@@ -42,6 +43,10 @@ public class DeliveryDTO extends BaseDTO implements DTOEntityDescriptionImplemen
     private String description;
     private boolean isShipped;
 
+    public DeliveryDTO(String deliveryCode, String description) {
+        this.deliveryCode = deliveryCode;
+        this.description = description;
+    }
 
     public DeliveryDTO(String deliveryCode, String deliveryType, LocalDateTime pickUpTime, LocalDateTime deliveryTime, String description) {
         this.deliveryCode = deliveryCode;
@@ -84,5 +89,18 @@ public class DeliveryDTO extends BaseDTO implements DTOEntityDescriptionImplemen
     @Override
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DeliveryDTO that = (DeliveryDTO) o;
+        return Objects.equals(deliveryCode, that.deliveryCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(deliveryCode);
     }
 }

@@ -3,13 +3,13 @@ package eu.mrndesign.matned.metalserwisproductionrest.service;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.order.ClientDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.ClientEntity;
 import eu.mrndesign.matned.metalserwisproductionrest.repository.ClientRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,8 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions.CLIENT_EXISTS;
-import static eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions.USER_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -47,6 +45,11 @@ class ClientServiceTest {
         for (int i = 1; i <= 3; i++) {
             clients.add(new ClientEntity("client"+i, "description"+i));
         }
+    }
+
+    @AfterEach
+    void reset(){
+        clients.clear();
     }
 
     @Test
@@ -77,14 +80,18 @@ class ClientServiceTest {
     @Test
     void findAllClientsWithActiveOrders(){
         doReturn(new PageImpl<>(clients.subList(0, 3), pageable, 3)).when(clientRepository).findAllWithActiveOrders(any(Pageable.class));
-        assertEquals(3, clientService.findAllClientsWithActiveOrders(1,1,sortBy).size());
+        assertEquals(3, clientService.findAllClientsWithActiveOrders(1,5,sortBy).size());
     }
 
     @Test
     void editClient(){
         doReturn(Optional.of(clients.get(0))).when(clientRepository).findById(any());
         doReturn(clients.get(0)).when(clientRepository).save(any());
-        assertEquals(clientService.saveClient(ClientDTO.apply(clients.get(0))).getName(), "client1");
+
+        ClientDTO updateData = new ClientDTO("testing-change", null);
+       ClientDTO dto = clientService.editClient(0L, updateData);
+
+        assertEquals(clientService.saveClient(ClientDTO.apply(clients.get(0))).getName(), "testing-change");
         assertEquals(clientService.saveClient(ClientDTO.apply(clients.get(0))).getDescription(), "description1");
     }
 

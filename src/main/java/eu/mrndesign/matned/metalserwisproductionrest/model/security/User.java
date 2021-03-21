@@ -16,7 +16,6 @@ import java.util.List;
 @Table(name = "USER_ENTITY")
 public class User extends BaseEntity<UserDTO> implements AuditInterface {
 
-    public static final String ROLE_NOT_FOUND = "Role not found";
 
     public static User applyRegistration(UserRegistrationDTO dto, UserRole role) {
         User register = new User(dto.getLogin(), dto.getPassword());

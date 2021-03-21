@@ -3,11 +3,13 @@ package eu.mrndesign.matned.metalserwisproductionrest.service;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.order.DeliveryDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.Delivery;
 import eu.mrndesign.matned.metalserwisproductionrest.repository.DeliveryRepository;
+import eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions.NO_EDITED_DATA_GIVEN;
 import static eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions.NO_SUCH_DELIVERY;
 
 @Service
@@ -25,7 +27,7 @@ public class DeliveryService extends BaseService{
                         .save(
                                 new Delivery(
                                         dto.getDeliveryCode(),
-                                        Delivery.DeliveryType.valueOf(dto.getDeliveryType()),
+                                        dto.getDeliveryType()!=null?Delivery.DeliveryType.valueOf(dto.getDeliveryType()):null,
                                         dto.getPickUpTime(),
                                         dto.getDeliveryTime(),
                                         dto.getDescription())
@@ -49,9 +51,11 @@ public class DeliveryService extends BaseService{
     }
 
     public DeliveryDTO editDelivery(Long id, DeliveryDTO editedData) {
-        Delivery toEdit = deliveryRepository.findById(id).orElseThrow(()->new RuntimeException(NO_SUCH_DELIVERY));
-        toEdit.applyNew(editedData);
-        return DeliveryDTO.apply(deliveryRepository.save(toEdit));
+        if(editedData != null) {
+            Delivery toEdit = deliveryRepository.findById(id).orElseThrow(() -> new RuntimeException(NO_SUCH_DELIVERY));
+            toEdit.applyNew(editedData);
+            return DeliveryDTO.apply(deliveryRepository.save(toEdit));
+        }else throw new RuntimeException(NO_EDITED_DATA_GIVEN);
     }
 
 }

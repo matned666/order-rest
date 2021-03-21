@@ -27,6 +27,14 @@ public class ClientEntity extends BaseEntity<ClientDTO> implements AuditInterfac
         this.clientDescription = clientDescription;
     }
 
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public void setClientDescription(String clientDescription) {
+        this.clientDescription = clientDescription;
+    }
+
     public String getClientName() {
         return clientName;
     }

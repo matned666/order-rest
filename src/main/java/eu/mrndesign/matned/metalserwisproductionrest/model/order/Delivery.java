@@ -31,10 +31,11 @@ public class Delivery extends BaseEntity<DeliveryDTO> implements AuditInterface 
     public Delivery() {
     }
 
+
     public Delivery(String deliveryCode,
-                    DeliveryType deliveryType) {
+                    String description) {
         this.deliveryCode = deliveryCode;
-        this.deliveryType = deliveryType;
+        this.description = description;
     }
 
     public Delivery(String deliveryCode,
@@ -103,14 +104,23 @@ public class Delivery extends BaseEntity<DeliveryDTO> implements AuditInterface 
 
     @Override
     public void applyNew(DeliveryDTO editedData) {
-         this.deliveryCode = editedData.getName();
-         this.deliveryType = Delivery.DeliveryType.valueOf(editedData.getDeliveryType());
-         this.deliveryTime = editedData.getDeliveryTime();
-         this.description = editedData.getDescription();
-         this.isShipped = editedData.isShipped();
+        if (editedData.getName() != null)
+            if (!editedData.getName().isEmpty())
+                this.deliveryCode = editedData.getName();
+        if (editedData.getDeliveryType() != null)
+            if (!editedData.getDeliveryType().isEmpty())
+                this.deliveryType = Delivery.DeliveryType.valueOf(editedData.getDeliveryType());
+        if (editedData.getDeliveryTime() != null)
+            this.deliveryTime = editedData.getDeliveryTime();
+        if (editedData.getPickUpTime() != null)
+            this.pickUpTime = editedData.getPickUpTime();
+        if (editedData.getDescription() != null)
+            if (!editedData.getDescription().isEmpty())
+                this.description = editedData.getDescription();
     }
 
-    public enum DeliveryType{
+    public enum DeliveryType {
+        NOT_SPECIFIED,
         CARRIER,
         SHIPPING,
         OWN,
