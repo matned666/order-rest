@@ -40,7 +40,6 @@ class ClientServiceTest {
 
     @BeforeEach
     void setUp() {
-
         clients = new LinkedList<>();
         sortBy = new String[1];
         sortBy[0] = "something";

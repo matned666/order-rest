@@ -32,6 +32,12 @@ public class Delivery extends BaseEntity<DeliveryDTO> implements AuditInterface 
     }
 
     public Delivery(String deliveryCode,
+                    DeliveryType deliveryType) {
+        this.deliveryCode = deliveryCode;
+        this.deliveryType = deliveryType;
+    }
+
+    public Delivery(String deliveryCode,
                     DeliveryType deliveryType,
                     LocalDateTime pickUpTime,
                     LocalDateTime deliveryTime,
@@ -78,14 +84,12 @@ public class Delivery extends BaseEntity<DeliveryDTO> implements AuditInterface 
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Delivery delivery = (Delivery) o;
-        return deliveryType == delivery.deliveryType &&
-                Objects.equals(deliveryTime, delivery.deliveryTime) &&
-                Objects.equals(description, delivery.description);
+        return Objects.equals(deliveryCode, delivery.deliveryCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), deliveryType, deliveryTime, description);
+        return Objects.hash(super.hashCode(), deliveryCode);
     }
 
     @Override
