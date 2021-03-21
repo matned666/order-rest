@@ -1,7 +1,5 @@
 package eu.mrndesign.matned.metalserwisproductionrest.service;
 
-import eu.mrndesign.matned.metalserwisproductionrest.dto.order.ClientDTO;
-import eu.mrndesign.matned.metalserwisproductionrest.dto.order.DeliveryDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.order.OrderDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.ClientEntity;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.Delivery;
@@ -19,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static eu.mrndesign.matned.metalserwisproductionrest.Patterns.getDateFromString;
 import static eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions.*;
 
 @Service
@@ -106,16 +105,35 @@ public class OrderService extends BaseService {
         return findList(orderRepository.findOrdersByNotDone(getPageable(startPage, itemsPerPage, sortBy)));
     }
 
-    public List<OrderDTO> findByDeadlineDate(Date deadlineDate, Integer startPage, Integer itemsPerPage, String[] sortBy) {
-        return findList(orderRepository.findOrdersByDeadlineDate(deadlineDate, getPageable(startPage, itemsPerPage, sortBy)));
+    public List<OrderDTO> findByDeadlineDate(String deadlineD, Integer startPage, Integer itemsPerPage, String[] sortBy) {
+        Date deadlineDate = getDateFromString(deadlineD);
+        if (deadlineDate != null)
+            return findList(orderRepository.findOrdersByDeadlineDate(deadlineDate, getPageable(startPage, itemsPerPage, sortBy)));
+        else return findAll(startPage, itemsPerPage, sortBy);
     }
 
-    public List<OrderDTO> findByDeadlineDateBetweenDates(Date deadlineStartDate, Date deadlineEndDate, Integer startPage, Integer itemsPerPage, String[] sortBy) {
-        return findList(orderRepository.findByDeadlineDateBetweenDates(deadlineStartDate, deadlineEndDate, getPageable(startPage, itemsPerPage, sortBy)));
+    public List<OrderDTO> findByDeadlineDateBetweenDates(String deadlineStartD, String deadlineEndD, Integer startPage, Integer itemsPerPage, String[] sortBy) {
+        Date deadlineStartDate = getDateFromString(deadlineStartD);
+        Date deadlineEndDate = getDateFromString(deadlineEndD);
+        if (deadlineStartDate != null && deadlineEndDate != null)
+            return findList(orderRepository.findByDeadlineDateBetweenDates(deadlineStartDate, deadlineEndDate, getPageable(startPage, itemsPerPage, sortBy)));
+        else if (deadlineStartDate != null)
+            return findList(orderRepository.findByDeadlineDateBetweenDates(deadlineStartDate, new Date(Long.MAX_VALUE), getPageable(startPage, itemsPerPage, sortBy)));
+        else if (deadlineEndDate != null)
+            return findList(orderRepository.findByDeadlineDateBetweenDates(new Date(0L), deadlineEndDate, getPageable(startPage, itemsPerPage, sortBy)));
+        else return findAll(startPage, itemsPerPage, sortBy);
     }
 
-    public List<OrderDTO> findByOrderDateBetweenDates(Date deadlineStartDate, Date deadlineEndDate, Integer startPage, Integer itemsPerPage, String[] sortBy) {
-        return findList(orderRepository.findByOrderDateBetweenDates(deadlineStartDate, deadlineEndDate, getPageable(startPage, itemsPerPage, sortBy)));
+    public List<OrderDTO> findByOrderDateBetweenDates(String orderStartD, String orderEndD, Integer startPage, Integer itemsPerPage, String[] sortBy) {
+        Date orderStartDate = getDateFromString(orderStartD);
+        Date orderEndDate = getDateFromString(orderEndD);
+        if (orderStartDate != null && orderEndDate != null)
+            return findList(orderRepository.findByOrderDateBetweenDates(orderStartDate, orderEndDate, getPageable(startPage, itemsPerPage, sortBy)));
+        else if (orderStartDate != null)
+            return findList(orderRepository.findByOrderDateBetweenDates(orderStartDate, new Date(Long.MAX_VALUE), getPageable(startPage, itemsPerPage, sortBy)));
+        else if (orderEndDate != null)
+            return findList(orderRepository.findByOrderDateBetweenDates(new Date(0L), orderEndDate, getPageable(startPage, itemsPerPage, sortBy)));
+        else return findAll(startPage, itemsPerPage, sortBy);
     }
 
     public List<OrderDTO> findOrdersByOverDeadlineDate(Integer startPage, Integer itemsPerPage, String[] sortBy) {
@@ -124,6 +142,8 @@ public class OrderService extends BaseService {
 
 
     //    Private
+
+
     private Order getClientById(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException(NO_SUCH_ORDER));
     }

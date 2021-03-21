@@ -1,8 +1,5 @@
 package eu.mrndesign.matned.metalserwisproductionrest.service;
 
-import eu.mrndesign.matned.metalserwisproductionrest.dto.DTOEntityDescriptionImplementation;
-import eu.mrndesign.matned.metalserwisproductionrest.model.common.EntityDescription;
-import eu.mrndesign.matned.metalserwisproductionrest.model.common.EntityDescriptionImplementation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,18 +18,6 @@ public abstract class BaseService{
     protected Integer defaultStartPage;
     @Value("${default.page.size}")
     protected Integer defaultPageSize;
-
-    protected EntityDescription getEntityDescription(EntityDescriptionImplementation entity, DTOEntityDescriptionImplementation dto) {
-        EntityDescription entityDescription;
-        if (entity.getEntityDescription() == null)
-            entityDescription = new EntityDescription(dto.getName(), dto.getDescription());
-        else {
-            entityDescription = entity.getEntityDescription();
-            entityDescription.setName(dto.getName());
-            entityDescription.setDescription(dto.getDescription());
-        }
-        return entityDescription;
-    }
 
 
     protected Sort.Direction getSortDirection(String direction) {
