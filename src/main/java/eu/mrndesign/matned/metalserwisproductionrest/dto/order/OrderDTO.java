@@ -70,7 +70,7 @@ public class OrderDTO extends BaseDTO implements DTOEntityDescriptionImplementat
         this.desiredQuantity = builder.desiredQuantity;
         this.quantityDone = builder.quantityDone;
         this.description = builder.description;
-        this.orderDate = builder.orderDate != null ? builder.orderDate : new Date(System.currentTimeMillis());
+        this.orderDate = builder.orderDate;
         this.orderDeadline = builder.orderDeadline;
         this.isDone = builder.isDone;
         this.isActive = builder.isActive;

@@ -37,16 +37,32 @@ public class OrderController {
                                         @RequestParam(defaultValue = "all", name = "search") String search,
                                         @RequestParam(defaultValue = "", name = "element") String element,
                                         @RequestParam(defaultValue = "", name = "element2") String element2){
-        switch (search){
+        switch (search.toUpperCase()){
 
-            case "DEADLINE_OVER" : orderService.findOrdersByOverDeadlineDate(page, amount, sort);
-            case "ORDER_DATE_BETWEEN" : orderService.findByOrderDateBetweenDates(element, element2,  page, amount, sort);
-            case "DEADLINE_DATE_BETWEEN" : orderService.findByDeadlineDateBetweenDates(element, element2, page, amount, sort);
-            case "DEADLINE_DATE" : orderService.findByDeadlineDate(element, page, amount, sort);
-            case "NOT_DONE": orderService.findByNotDone(page, amount, sort);
-            case "DONE": orderService.findByDone(page, amount, sort);
-            case "DELIVERY": orderService.findByDeliveryCode(element, page, amount, sort);
-            case "CLIENT": orderService.findByClientName(element, page, amount, sort);
+            case "DEADLINE_OVER" : {
+                return orderService.findOrdersByOverDeadlineDate(page, amount, sort);
+            }
+            case "ORDER_DATE_BETWEEN" : {
+                return orderService.findByOrderDateBetweenDates(element, element2,  page, amount, sort);
+            }
+            case "DEADLINE_DATE_BETWEEN" : {
+                return orderService.findByDeadlineDateBetweenDates(element, element2, page, amount, sort);
+            }
+            case "DEADLINE_DATE" : {
+                return orderService.findByDeadlineDate(element, page, amount, sort);
+            }
+            case "NOT_DONE": {
+                return orderService.findByNotDone(page, amount, sort);
+            }
+            case "DONE": {
+                return orderService.findByDone(page, amount, sort);
+            }
+            case "DELIVERY": {
+                return orderService.findByDeliveryCode(element, page, amount, sort);
+            }
+            case "CLIENT": {
+                return orderService.findByClientName(element, page, amount, sort);
+            }
             default: return orderService.findAll(page, amount, sort);
         }
 
