@@ -64,6 +64,9 @@ public class OrderDTO extends BaseDTO implements DTOEntityDescriptionImplementat
     private String delivery;
     private List<String> processes;
 
+    public OrderDTO() {
+    }
+
     private OrderDTO(OrderDTOBuilder builder) {
         this.product = builder.product;
         this.description = builder.description;

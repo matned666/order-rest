@@ -5,13 +5,12 @@ import eu.mrndesign.matned.metalserwisproductionrest.service.ClientService;
 import eu.mrndesign.matned.metalserwisproductionrest.service.DeliveryService;
 import eu.mrndesign.matned.metalserwisproductionrest.service.OrderService;
 import eu.mrndesign.matned.metalserwisproductionrest.service.ProcessService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -30,7 +29,7 @@ public class OrderController {
         this.processService = processService;
     }
 
-    @GetMapping("/orders")
+    @GetMapping("")
     public List<OrderDTO> showAllOrders(@RequestParam(defaultValue = "${default.sort.by}", name = "sort") String[] sort,
                                         @RequestParam(defaultValue = "${default.page.start}", name = "page") Integer page,
                                         @RequestParam(defaultValue = "${default.page.size}", name = "amount") Integer amount,
@@ -67,5 +66,52 @@ public class OrderController {
         }
 
     }
+
+    @GetMapping("/{id}")
+    public OrderDTO getSingleOrder(@PathVariable Long id){
+        return orderService.findById(id);
+    }
+
+    @PostMapping("")
+    public OrderDTO saveNewOrder(@RequestBody OrderDTO orderData)
+            {
+        return orderService.saveOrder(orderData);
+    }
+
+    @PostMapping("/{id}")
+    public OrderDTO editOrder(@PathVariable Long id,
+                              @RequestBody OrderDTO editedData){
+        return orderService.edit(id, editedData);
+    }
+
+    @PostMapping("/{id}/client/{clientId}")
+    public OrderDTO editClientOrder(@PathVariable Long id,
+                                    @PathVariable Long clientId){
+        return orderService.changeClient(id, clientId);
+    }
+
+    @PostMapping("/{id}/processes")
+    public OrderDTO editClientProcesses(@PathVariable Long id,
+                                        @RequestBody List<Long> processes){
+        return orderService.changeProcesses(id, processes);
+    }
+
+    @PostMapping("/{id}/delivery/{deliveryId}")
+    public OrderDTO editDelivery(@PathVariable Long id,
+                                 @PathVariable Long deliveryId){
+        return orderService.changeDelivery(id, deliveryId);
+    }
+
+    @DeleteMapping("/{id}")
+    public List<OrderDTO> deleteOrder(@PathVariable Long id,
+                                      @RequestParam(defaultValue = "${default.sort.by}", name = "sort") String[] sort,
+                                      @RequestParam(defaultValue = "${default.page.start}", name = "page") Integer page,
+                                      @RequestParam(defaultValue = "${default.page.size}", name = "amount") Integer amount){
+        return orderService.deleteOrder(id, page, amount, sort);
+    }
+
+
+
+
 
 }

@@ -16,14 +16,11 @@ import java.util.Objects;
 @Table(name = "CLIENT_ORDER")
 public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
 
-    public static Order apply(OrderDTO dto, List<Process> processes, ClientEntity client, Delivery delivery){
+    public static Order apply(OrderDTO dto){
         return new OrderBuilder(dto.getProduct(), dto.getDesiredQuantity())
-                .client(client)
-                .delivery(delivery)
                 .description(dto.getDescription())
                 .orderDate(dto.getOrderDate())
                 .orderDeadline(dto.getOrderDeadline())
-                .addProcesses(processes)
                 .build();
     }
 

@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith({SpringExtension.class})
@@ -74,7 +75,7 @@ class OrderServiceTest {
         doReturn(Optional.of(deliveries.get(0))).when(deliveryRepository).findById(any());
         doReturn(orders.get(0)).when(orderRepository).save(any());
 
-        assertEquals(OrderDTO.apply(orders.get(0)).getProduct(), orderService.saveOrder(OrderDTO.apply(orders.get(0)),new LinkedList<>(),1L, 1L ).getProduct());
+        assertEquals(OrderDTO.apply(orders.get(0)).getProduct(), orderService.saveOrder(OrderDTO.apply(orders.get(0))).getProduct());
     }
 
     @Test
@@ -243,6 +244,13 @@ class OrderServiceTest {
     void findOrdersByOverDeadlineDate() {
         doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findOrdersByOverDeadlineDate(any(Pageable.class));
         assertEquals(3 , orderService.findOrdersByOverDeadlineDate(1,1,sortBy).size());
+    }
+
+    @Test
+    void deleteOrder() {
+        doNothing().when(orderRepository).deleteById(any());
+        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findAll(any(Pageable.class));
+        assertEquals(3 , orderService.deleteOrder(1L, 1,1,sortBy).size());
     }
 
 }

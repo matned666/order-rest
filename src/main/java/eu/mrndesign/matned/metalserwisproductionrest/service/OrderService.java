@@ -38,12 +38,8 @@ public class OrderService extends BaseService {
         this.clientRepository = clientRepository;
     }
 
-    public OrderDTO saveOrder(OrderDTO dto, List<Long> processes, Long clientId, Long deliveryId) {
-        List<Process> processList = new LinkedList<>();
-        processes.forEach(x -> processList.add(processRepository.findById(x).orElseThrow(() -> new RuntimeException(NO_SUCH_PROCESS))));
-        ClientEntity client = clientRepository.findById(clientId).orElse(null);
-        Delivery deliveryEntity = deliveryRepository.findById(deliveryId).orElse(null);
-        return OrderDTO.apply(orderRepository.save(Order.apply(dto, processList, client, deliveryEntity)));
+    public OrderDTO saveOrder(OrderDTO dto) {
+        return OrderDTO.apply(orderRepository.save(Order.apply(dto)));
     }
 
     public OrderDTO changeOrderActiveStatus(Long orderId) {
@@ -140,6 +136,11 @@ public class OrderService extends BaseService {
         return findList(orderRepository.findOrdersByOverDeadlineDate(getPageable(startPage, itemsPerPage, sortBy)));
     }
 
+
+    public List<OrderDTO> deleteOrder(Long id, Integer startPage, Integer itemsPerPage, String[] sortBy) {
+        orderRepository.deleteById(id);
+        return findAll(startPage, itemsPerPage, sortBy);
+    }
 
     //    Private
 
