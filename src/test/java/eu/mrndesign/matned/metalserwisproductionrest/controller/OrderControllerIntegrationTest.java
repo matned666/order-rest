@@ -1,10 +1,7 @@
 package eu.mrndesign.matned.metalserwisproductionrest.controller;
 
-import eu.mrndesign.matned.metalserwisproductionrest.dto.UserDTO;
-import eu.mrndesign.matned.metalserwisproductionrest.dto.UserRegistrationDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.dto.order.OrderDTO;
 import eu.mrndesign.matned.metalserwisproductionrest.model.order.Order;
-import eu.mrndesign.matned.metalserwisproductionrest.model.security.User;
 import eu.mrndesign.matned.metalserwisproductionrest.repository.OrderRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,12 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import static eu.mrndesign.matned.metalserwisproductionrest.JsonOps.asJsonString;
-import static eu.mrndesign.matned.metalserwisproductionrest.utils.Exceptions.USER_NOT_FOUND;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
