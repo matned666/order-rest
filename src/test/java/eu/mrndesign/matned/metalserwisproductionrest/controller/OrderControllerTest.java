@@ -148,7 +148,7 @@ class OrderControllerTest {
     @DisplayName("POST /orders test - order saved with status 200")
     @WithMockUser(roles = "PUBLISHER")
     void saveNewOrder() throws Exception {
-        Mockito.doReturn(orders.get(0)).when(orderService).saveOrder(any());
+        Mockito.doReturn(orders.get(0)).when(orderService).saveOrder(any(),any(),any(), any());
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/orders")
@@ -203,6 +203,20 @@ class OrderControllerTest {
                 .andExpect(content().json(asJsonString(orders.get(0))))
                 .andExpect(status().isOk())
                 .andReturn();    }
+
+    @Test
+    @DisplayName("POST /orders/1/activate test - order activation with status 200")
+    @WithMockUser(roles = "PUBLISHER")
+    void setActivationOrder() throws Exception {
+        Mockito.doReturn(orders.get(0)).when(orderService).setActive(any());
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/orders/1/activate"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(content().json(asJsonString(orders.get(0))))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
 
     @Test
     @DisplayName("POST /orders/1 test - order NOT edited with status 403")
@@ -266,6 +280,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("POST /orders/1/delivery/1 test - order delivery edited with status 200")
     @WithMockUser(roles = "PUBLISHER")
     void editOrderDelivery() throws Exception {
         Mockito.doReturn(orders.get(0)).when(orderService).changeDelivery(any(), any());

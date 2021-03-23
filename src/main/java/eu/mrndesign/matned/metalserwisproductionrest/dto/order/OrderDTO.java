@@ -171,6 +171,23 @@ public class OrderDTO extends BaseDTO implements DTOEntityDescriptionImplementat
         return Objects.hash(product, desiredQuantity, quantityDone, description, orderDate, orderDeadline, isDone, isActive, clientName, delivery, processes);
     }
 
+    @Override
+    public String toString() {
+        return "OrderDTO{" +
+                "product='" + product + '\'' +
+                ", desiredQuantity=" + desiredQuantity +
+                ", quantityDone=" + quantityDone +
+                ", description='" + description + '\'' +
+                ", orderDate=" + orderDate +
+                ", orderDeadline=" + orderDeadline +
+                ", isDone=" + isDone +
+                ", isActive=" + isActive +
+                ", clientName='" + clientName + '\'' +
+                ", delivery='" + delivery + '\'' +
+                ", processes=" + processes +
+                '}';
+    }
+
     public static class OrderDTOBuilder {
 
         private String product;

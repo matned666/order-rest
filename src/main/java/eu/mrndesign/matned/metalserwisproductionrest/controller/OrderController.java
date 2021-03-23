@@ -73,9 +73,12 @@ public class OrderController {
     }
 
     @PostMapping("")
-    public OrderDTO saveNewOrder(@RequestBody OrderDTO orderData)
-            {
-        return orderService.saveOrder(orderData);
+    public OrderDTO saveNewOrder(@RequestBody OrderDTO orderData,
+                                 @RequestBody(required=false) List<Long> processes,
+                                 @RequestBody(required=false) Long clientId,
+                                 @RequestBody(required=false) Long deliveryId)
+    {
+        return orderService.saveOrder(orderData, processes, clientId, deliveryId);
     }
 
     @PostMapping("/{id}")
@@ -100,6 +103,11 @@ public class OrderController {
     public OrderDTO editOrderDelivery(@PathVariable Long id,
                                  @PathVariable Long deliveryId){
         return orderService.changeDelivery(id, deliveryId);
+    }
+
+    @PostMapping("/{id}/activate")
+    public OrderDTO setOrderActive(@PathVariable Long id) {
+        return orderService.setActive(id);
     }
 
     @DeleteMapping("/{id}")

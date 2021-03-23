@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
@@ -37,4 +39,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("select o from Order o where o.orderDate >= :order_date_start and o.orderDate <= :order_date_end")
     Page<Order> findByOrderDateBetweenDates(@Param("order_date_start") Date orderDateStart, @Param("order_date_start") Date orderDateEnd, Pageable pageable);
+
+    @Query("select o from Order o where o.product = :order_name and o.desiredQuantity = :order_quantity")
+    List<Order> findByNameAndQuantity(@Param("order_name") String orderName, @Param("order_quantity") int quantity);
 }

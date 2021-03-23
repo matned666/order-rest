@@ -1,5 +1,6 @@
 package eu.mrndesign.matned.metalserwisproductionrest.service;
 
+import eu.mrndesign.matned.metalserwisproductionrest.dto.order.OrderDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -65,6 +66,7 @@ public abstract class BaseService{
             return !str.trim().isEmpty() && !str.trim().isBlank();
         else return false;
     }
+
 
 
 }

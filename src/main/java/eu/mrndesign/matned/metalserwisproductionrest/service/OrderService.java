@@ -38,44 +38,53 @@ public class OrderService extends BaseService {
         this.clientRepository = clientRepository;
     }
 
-    public OrderDTO saveOrder(OrderDTO dto) {
-        return OrderDTO.apply(orderRepository.save(Order.apply(dto)));
+    public OrderDTO saveOrder(OrderDTO dto, List<Long> processes, Long clientId, Long deliveryId) {
+        List<Process> processList = new LinkedList<>();
+        ClientEntity client = null;
+        Delivery deliveryEntity = null;
+        if (processes != null)
+            processes.forEach(x -> processList.add(processRepository.findById(x).orElseThrow(() -> new RuntimeException(NO_SUCH_PROCESS))));
+        if (clientId != null)
+            client = clientRepository.findById(clientId).orElse(null);
+        if (deliveryId != null)
+            deliveryEntity = deliveryRepository.findById(deliveryId).orElse(null);
+        return OrderDTO.apply(orderRepository.save(Order.apply(dto, processList, client, deliveryEntity)));
     }
 
     public OrderDTO changeOrderActiveStatus(Long orderId) {
-        Order toEdit = getClientById(orderId);
+        Order toEdit = getOrder(orderId);
         toEdit.setActive();
         return OrderDTO.apply(orderRepository.save(toEdit));
     }
 
     public OrderDTO findById(Long id) {
         if (id != null) {
-            return OrderDTO.apply(getClientById(id));
+            return OrderDTO.apply(getOrder(id));
         } else {
             throw new RuntimeException(NO_SUCH_ORDER);
         }
     }
 
     public OrderDTO edit(Long id, OrderDTO editedData) {
-        Order toEdit = getClientById(id);
+        Order toEdit = getOrder(id);
         toEdit.applyNew(editedData);
         return OrderDTO.apply(orderRepository.save(toEdit));
     }
 
     public OrderDTO changeClient(Long orderId, Long clientId) {
-        Order toEdit = getClientById(orderId);
+        Order toEdit = getOrder(orderId);
         toEdit.setClient(clientRepository.findById(clientId).orElse(toEdit.getClient()));
         return OrderDTO.apply(orderRepository.save(toEdit));
     }
 
     public OrderDTO changeDelivery(Long orderId, Long deliveryId) {
-        Order toEdit = getClientById(orderId);
+        Order toEdit = getOrder(orderId);
         toEdit.setDelivery(deliveryRepository.findById(deliveryId).orElse(toEdit.getDelivery()));
         return OrderDTO.apply(orderRepository.save(toEdit));
     }
 
     public OrderDTO changeProcesses(Long orderId, List<Long> processesIds) {
-        Order toEdit = getClientById(orderId);
+        Order toEdit = getOrder(orderId);
         toEdit.applyNewProcessList(processRepository.findAllById(processesIds));
         return OrderDTO.apply(orderRepository.save(toEdit));
     }
@@ -142,10 +151,16 @@ public class OrderService extends BaseService {
         return findAll(startPage, itemsPerPage, sortBy);
     }
 
+    public OrderDTO setActive(Long id) {
+        Order o = getOrder(id);
+        o.setActive();
+        return OrderDTO.apply(orderRepository.save(o));
+    }
+
     //    Private
 
 
-    private Order getClientById(Long orderId) {
+    private Order getOrder(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException(NO_SUCH_ORDER));
     }
 

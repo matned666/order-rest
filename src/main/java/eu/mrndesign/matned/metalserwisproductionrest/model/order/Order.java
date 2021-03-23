@@ -16,11 +16,14 @@ import java.util.Objects;
 @Table(name = "CLIENT_ORDER")
 public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
 
-    public static Order apply(OrderDTO dto){
+    public static Order apply(OrderDTO dto, List<Process> processes, ClientEntity client, Delivery delivery){
         return new OrderBuilder(dto.getProduct(), dto.getDesiredQuantity())
+                .client(client)
+                .delivery(delivery)
                 .description(dto.getDescription())
                 .orderDate(dto.getOrderDate())
                 .orderDeadline(dto.getOrderDeadline())
+                .addProcesses(processes)
                 .build();
     }
 
@@ -181,6 +184,22 @@ public class Order extends BaseEntity<OrderDTO> implements AuditInterface {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), product, desiredQuantity, quantityDone, description, orderDate, orderDeadline, isDone, isActive, client, delivery, processes);
+    }
+
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "product='" + product + '\'' +
+                ", desiredQuantity=" + desiredQuantity +
+                ", quantityDone=" + quantityDone +
+                ", description='" + description + '\'' +
+                ", orderDate=" + orderDate +
+                ", orderDeadline=" + orderDeadline +
+                ", isDone=" + isDone +
+                ", isActive=" + isActive +
+                ", createdDate=" + getCreatedDate().orElse(null) +
+                '}';
     }
 
     public static class OrderBuilder{

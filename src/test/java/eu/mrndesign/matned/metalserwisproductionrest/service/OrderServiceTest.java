@@ -61,10 +61,10 @@ class OrderServiceTest {
         sortBy[0] = "something";
         pageable = orderService.getPageable(1, 10, sortBy);
         for (int i = 1; i <= 3; i++) {
-            clients.add(new ClientEntity("Client"+i, "Client"+i+" description"));
-            deliveries.add(new Delivery("Delivery"+i, "Delivery"+i+" description"));
-            processes.add(new Process("Process"+i, "Process"+i+" description"));
-            orders.add(new Order.OrderBuilder("Order"+i, i*1000).build());
+            clients.add(new ClientEntity("Client" + i, "Client" + i + " description"));
+            deliveries.add(new Delivery("Delivery" + i, "Delivery" + i + " description"));
+            processes.add(new Process("Process" + i, "Process" + i + " description"));
+            orders.add(new Order.OrderBuilder("Order" + i, i * 1000).build());
         }
     }
 
@@ -75,7 +75,7 @@ class OrderServiceTest {
         doReturn(Optional.of(deliveries.get(0))).when(deliveryRepository).findById(any());
         doReturn(orders.get(0)).when(orderRepository).save(any());
 
-        assertEquals(OrderDTO.apply(orders.get(0)).getProduct(), orderService.saveOrder(OrderDTO.apply(orders.get(0))).getProduct());
+        assertEquals(OrderDTO.apply(orders.get(0)).getProduct(), orderService.saveOrder(OrderDTO.apply(orders.get(0)), new LinkedList<>(), 1L, 1L).getProduct());
     }
 
     @Test
@@ -91,14 +91,14 @@ class OrderServiceTest {
     void findById() {
         doReturn(Optional.of(orders.get(0))).when(orderRepository).findById(any());
 
-        assertEquals(OrderDTO.apply(orders.get(0)).getProduct(), orderService.findById(1L ).getProduct());
+        assertEquals(OrderDTO.apply(orders.get(0)).getProduct(), orderService.findById(1L).getProduct());
     }
 
     @Test
     void findByIdThrowsRuntimeXWhenNoOrderFoundById() {
         doReturn(Optional.empty()).when(orderRepository).findById(any());
 
-        assertThrows(RuntimeException.class, ()-> orderService.findById(1L));
+        assertThrows(RuntimeException.class, () -> orderService.findById(1L));
     }
 
     @Test
@@ -133,7 +133,19 @@ class OrderServiceTest {
         assertEquals(orders.get(0).getClient(), clients.get(0));
     }
 
-     @Test
+    @Test
+    void setOrderActivationStatus() {
+        doReturn(Optional.of(orders.get(0))).when(orderRepository).findById(any());
+        doReturn(orders.get(0)).when(orderRepository).save(any());
+
+        assertFalse(orders.get(0).isActive());
+        OrderDTO dto = orderService.setActive(0L);
+        assertTrue(orders.get(0).isActive());
+        dto = orderService.setActive(0L);
+        assertFalse(orders.get(0).isActive());
+    }
+
+    @Test
     void changeClientLeavesPreviousWhenNoClientFoundInDB() {
         doReturn(Optional.of(orders.get(0))).when(orderRepository).findById(any());
         doReturn(Optional.empty()).when(clientRepository).findById(any());
@@ -141,7 +153,7 @@ class OrderServiceTest {
 
         OrderDTO dto = orderService.changeClient(0L, 0L);
 
-         assertNull(orders.get(0).getClient());
+        assertNull(orders.get(0).getClient());
 
     }
 
@@ -180,77 +192,77 @@ class OrderServiceTest {
 
     @Test
     void findAll() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findAll(any(Pageable.class));
-        assertEquals(3 , orderService.findAll(1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findAll(any(Pageable.class));
+        assertEquals(3, orderService.findAll(1, 1, sortBy).size());
     }
 
     @Test
     void findByClientName() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findOrdersByClientName(any(),any(Pageable.class));
-        assertEquals(3 , orderService.findByClientName("anything",1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findOrdersByClientName(any(), any(Pageable.class));
+        assertEquals(3, orderService.findByClientName("anything", 1, 1, sortBy).size());
     }
 
     @Test
     void findByDeliveryCode() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findOrdersByDeliveryCode(any(),any(Pageable.class));
-        assertEquals(3 , orderService.findByDeliveryCode("anything",1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findOrdersByDeliveryCode(any(), any(Pageable.class));
+        assertEquals(3, orderService.findByDeliveryCode("anything", 1, 1, sortBy).size());
     }
 
     @Test
     void findByDone() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findOrdersByDone(any(Pageable.class));
-        assertEquals(3 , orderService.findByDone(1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findOrdersByDone(any(Pageable.class));
+        assertEquals(3, orderService.findByDone(1, 1, sortBy).size());
     }
 
     @Test
     void findByNotDone() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findOrdersByNotDone(any(Pageable.class));
-        assertEquals(3 , orderService.findByNotDone(1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findOrdersByNotDone(any(Pageable.class));
+        assertEquals(3, orderService.findByNotDone(1, 1, sortBy).size());
     }
 
     @Test
     void findByDeadlineDate() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findOrdersByDeadlineDate(any(),any(Pageable.class));
-        assertEquals(3 , orderService.findByDeadlineDate("2000-01-01",1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findOrdersByDeadlineDate(any(), any(Pageable.class));
+        assertEquals(3, orderService.findByDeadlineDate("2000-01-01", 1, 1, sortBy).size());
     }
 
     @Test
     void findByDeadlineDateWithAnotherDateFormat() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findOrdersByDeadlineDate(any(),any(Pageable.class));
-        assertEquals(3 , orderService.findByDeadlineDate("01-01-2000",1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findOrdersByDeadlineDate(any(), any(Pageable.class));
+        assertEquals(3, orderService.findByDeadlineDate("01-01-2000", 1, 1, sortBy).size());
     }
 
     @Test
     void findByDeadlineDateWithAWrongDateFormat() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findOrdersByDeadlineDate(any(),any(Pageable.class));
-        doReturn(new PageImpl<>(orders.subList(0,2),pageable, 2)).when(orderRepository).findAll(any(Pageable.class));
-        assertEquals(2 , orderService.findByDeadlineDate("010100dfgdfgsfg",1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findOrdersByDeadlineDate(any(), any(Pageable.class));
+        doReturn(new PageImpl<>(orders.subList(0, 2), pageable, 2)).when(orderRepository).findAll(any(Pageable.class));
+        assertEquals(2, orderService.findByDeadlineDate("010100dfgdfgsfg", 1, 1, sortBy).size());
     }
 
     @Test
     void findByDeadlineDateBetweenDates() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findByDeadlineDateBetweenDates(any(), any(),any(Pageable.class));
-        assertEquals(3 , orderService.findByDeadlineDateBetweenDates("2000-01-01","2000-01-01",1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findByDeadlineDateBetweenDates(any(), any(), any(Pageable.class));
+        assertEquals(3, orderService.findByDeadlineDateBetweenDates("2000-01-01", "2000-01-01", 1, 1, sortBy).size());
     }
 
     @Test
     void findByOrderDateBetweenDates() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findByOrderDateBetweenDates(any(), any(),any(Pageable.class));
-        assertEquals(3 , orderService.findByOrderDateBetweenDates("2000-01-01","2000-01-01",1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findByOrderDateBetweenDates(any(), any(), any(Pageable.class));
+        assertEquals(3, orderService.findByOrderDateBetweenDates("2000-01-01", "2000-01-01", 1, 1, sortBy).size());
 
     }
 
     @Test
     void findOrdersByOverDeadlineDate() {
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findOrdersByOverDeadlineDate(any(Pageable.class));
-        assertEquals(3 , orderService.findOrdersByOverDeadlineDate(1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findOrdersByOverDeadlineDate(any(Pageable.class));
+        assertEquals(3, orderService.findOrdersByOverDeadlineDate(1, 1, sortBy).size());
     }
 
     @Test
     void deleteOrder() {
         doNothing().when(orderRepository).deleteById(any());
-        doReturn(new PageImpl<>(orders.subList(0,3),pageable, 3)).when(orderRepository).findAll(any(Pageable.class));
-        assertEquals(3 , orderService.deleteOrder(1L, 1,1,sortBy).size());
+        doReturn(new PageImpl<>(orders.subList(0, 3), pageable, 3)).when(orderRepository).findAll(any(Pageable.class));
+        assertEquals(3, orderService.deleteOrder(1L, 1, 1, sortBy).size());
     }
 
 }
