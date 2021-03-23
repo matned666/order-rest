@@ -85,19 +85,19 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/client/{clientId}")
-    public OrderDTO editClientOrder(@PathVariable Long id,
+    public OrderDTO editOrderClient(@PathVariable Long id,
                                     @PathVariable Long clientId){
         return orderService.changeClient(id, clientId);
     }
 
     @PostMapping("/{id}/processes")
-    public OrderDTO editClientProcesses(@PathVariable Long id,
+    public OrderDTO editOrderProcesses(@PathVariable Long id,
                                         @RequestBody List<Long> processes){
         return orderService.changeProcesses(id, processes);
     }
 
     @PostMapping("/{id}/delivery/{deliveryId}")
-    public OrderDTO editDelivery(@PathVariable Long id,
+    public OrderDTO editOrderDelivery(@PathVariable Long id,
                                  @PathVariable Long deliveryId){
         return orderService.changeDelivery(id, deliveryId);
     }

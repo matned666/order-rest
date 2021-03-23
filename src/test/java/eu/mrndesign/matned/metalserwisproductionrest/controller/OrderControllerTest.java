@@ -34,12 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class OrderControllerTest {
 
-    @MockBean
-    private ClientService clientService;
-    @MockBean
-    private ProcessService processService;
-    @MockBean
-    private DeliveryService deliveryService;
     @Autowired
     private MockMvc mockMvc;
 
@@ -195,42 +189,127 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("POST /orders/1 test - order edited with status 200")
+    @WithMockUser(roles = "PUBLISHER")
+    void editOrder() throws Exception {
+        Mockito.doReturn(orders.get(0)).when(orderService).edit(any(), any());
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/orders/1")
+                        .content(asJsonString(orders.get(0)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(content().json(asJsonString(orders.get(0))))
+                .andExpect(status().isOk())
+                .andReturn();    }
+
+    @Test
+    @DisplayName("POST /orders/1 test - order NOT edited with status 403")
     @WithMockUser(roles = "USER")
-    void editOrder() {
-//        TODO
+    void editOrderForbidden() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/orders/1")
+                        .content(asJsonString(orders.get(0)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isForbidden())
+                .andReturn();
     }
 
     @Test
-    @WithMockUser(roles = "USER")
-    void editClientOrder() {
-//        TODO
+    @DisplayName("POST /orders/1 test - order NOT edited with status 401")
+    void editOrderUnauthorized() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/orders/1")
+                        .content(asJsonString(orders.get(0)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isUnauthorized())
+                .andReturn();
     }
 
     @Test
-    @WithMockUser(roles = "USER")
-    void editClientProcesses() {
-//        TODO
+    @DisplayName("POST /orders/1/client/1 test - order client edited with status 200")
+    @WithMockUser(roles = "PUBLISHER")
+    void editOrderClient() throws Exception {
+        Mockito.doReturn(orders.get(0)).when(orderService).changeClient(any(), any());
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/orders/1/client/1")
+                        .content(asJsonString(orders.get(0)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(content().json(asJsonString(orders.get(0))))
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
     @Test
-    @WithMockUser(roles = "USER")
-    void editDelivery() {
-//        TODO
+    @DisplayName("POST /orders/1/processes test - order client edited with status 200")
+    @WithMockUser(roles = "PUBLISHER")
+    void editOrderProcesses() throws Exception {
+        Mockito.doReturn(orders.get(0)).when(orderService).changeProcesses(any(), any());
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/orders/1/processes")
+                        .content(asJsonString(new LinkedList<>()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(content().json(asJsonString(orders.get(0))))
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
     @Test
+    @WithMockUser(roles = "PUBLISHER")
+    void editOrderDelivery() throws Exception {
+        Mockito.doReturn(orders.get(0)).when(orderService).changeDelivery(any(), any());
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/orders/1/delivery/1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(content().json(asJsonString(orders.get(0))))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("DELETE /orders/1 test - order deleted with status 200")
     @WithMockUser(roles = "MANAGER")
-    void deleteOrder() {
-//        TODO
+    void deleteOrder() throws Exception {
+        Mockito.doReturn(orders).when(orderService).deleteOrder(any(), any(), any(), any());
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/orders/1")
+                        .accept("application/json"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(ordersJson))
+                .andReturn();
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @DisplayName("DELETE /orders/1 test - order NOT deleted with status 403")
+    @WithMockUser(roles = {"PUBLISHER", "USER"})
     void deleteOrderStatusForbidden() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.delete("/orders/1"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isForbidden())
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("DELETE /orders/1 test - order NOT deleted with status 401")
+    void deleteOrderStatusUnauthorized() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/orders/1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isUnauthorized())
                 .andReturn();
     }
 
